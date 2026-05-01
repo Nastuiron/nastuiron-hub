@@ -1,12 +1,16 @@
+'use client';
+
 import { ProjectArchitecture } from './ProjectArchitecture';
 import { ProjectStack } from './ProjectStack';
 import type { Project } from '../types/project.types';
+import { useProjectMode } from './ProjectModeContext';
 
 type ProjectDetailsProps = {
   project: Project;
 };
 
 export function ProjectDetails({ project }: ProjectDetailsProps) {
+  const { mode } = useProjectMode();
   return (
     <article className="space-y-12">
       <section className="max-w-3xl">
@@ -68,13 +72,15 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
         </ul>
       </section>
 
-      <section>
-        <h2 className="mb-4 text-2xl font-semibold text-white">
-          Architecture technique
-        </h2>
+      {mode === 'dev' && (
+        <section>
+          <h2 className="mb-4 text-2xl font-semibold text-white">
+            Architecture technique
+          </h2>
 
-        <ProjectArchitecture architecture={project.architecture} />
-      </section>
+          <ProjectArchitecture architecture={project.architecture} />
+        </section>
+      )}
     </article>
   );
 }
