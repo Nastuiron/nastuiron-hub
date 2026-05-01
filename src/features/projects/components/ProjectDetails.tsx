@@ -9,54 +9,17 @@ type ProjectDetailsProps = {
   project: Project;
 };
 
-export function ProjectDetails({ project }: ProjectDetailsProps) {
-  const { mode } = useProjectMode();
+function UserView({ project }: { project: Project }) {
   return (
-    <article className="space-y-12">
+    <>
       <section className="max-w-3xl">
-        <p className="text-sm font-medium uppercase tracking-[0.3em] text-blue-400">
-          Projet
-        </p>
+        <h1 className="text-4xl font-bold text-white">{project.name}</h1>
 
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-6xl">
-          {project.name}
-        </h1>
-
-        <p className="mt-6 text-lg leading-8 text-zinc-400">
-          {project.description}
-        </p>
-
-        <div className="mt-6">
-          <ProjectStack stack={project.stack} />
-        </div>
-
-        <div className="mt-8 flex flex-wrap gap-3">
-          {project.links.live && (
-            <a
-              href={project.links.live}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-blue-500"
-            >
-              Ouvrir le projet
-            </a>
-          )}
-
-          {project.links.github && (
-            <a
-              href={project.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-xl border border-white/10 px-5 py-3 text-sm font-medium text-zinc-300 transition hover:bg-white/5"
-            >
-              Voir le code
-            </a>
-          )}
-        </div>
+        <p className="mt-6 text-lg text-zinc-400">{project.description}</p>
       </section>
 
       <section>
-        <h2 className="mb-4 text-2xl font-semibold text-white">
+        <h2 className="text-2xl font-semibold text-white mb-4">
           Fonctionnalités
         </h2>
 
@@ -71,15 +34,66 @@ export function ProjectDetails({ project }: ProjectDetailsProps) {
           ))}
         </ul>
       </section>
+    </>
+  );
+}
 
-      {mode === 'dev' && (
-        <section>
-          <h2 className="mb-4 text-2xl font-semibold text-white">
-            Architecture technique
-          </h2>
+function DevView({ project }: { project: Project }) {
+  return (
+    <>
+      <section>
+        <h2 className="text-2xl font-semibold text-white mb-4">
+          Stack technique
+        </h2>
 
-          <ProjectArchitecture architecture={project.architecture} />
-        </section>
+        <div className="flex flex-wrap gap-2">
+          {project.stack.map((tech) => (
+            <span
+              key={tech}
+              className="rounded-lg bg-blue-500/10 px-3 py-1 text-sm text-blue-400"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-2xl font-semibold text-white mb-4">Architecture</h2>
+
+        <div className="space-y-2 text-zinc-400">
+          <div>
+            <strong>Frontend:</strong>{' '}
+            {project.architecture.frontend.join(', ')}
+          </div>
+
+          {project.architecture.backend && (
+            <div>
+              <strong>Backend:</strong>{' '}
+              {project.architecture.backend.join(', ')}
+            </div>
+          )}
+
+          {project.architecture.infra && (
+            <div>
+              <strong>Infra:</strong> {project.architecture.infra.join(', ')}
+            </div>
+          )}
+        </div>
+      </section>
+    </>
+  );
+}
+
+export function ProjectDetails({ project }: ProjectDetailsProps) {
+  const { mode } = useProjectMode();
+
+  return (
+    <article className="space-y-12">
+      {mode === 'user' ? (
+        <UserView project={project} />
+      ) : (
+        <DevView project={project} />
       )}
     </article>
   );
