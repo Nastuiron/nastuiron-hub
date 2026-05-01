@@ -1,0 +1,7 @@
+services:
+  nastuiron_hub:
+    build: .
+    container_name: nastuiron_hub
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
